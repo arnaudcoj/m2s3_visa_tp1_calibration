@@ -48,7 +48,11 @@ endfunction
 /// \return matrice 3*4 des parametres extrinseques.
 // -----------------------------------------------------------------------
 function E = ExtrinsicMatrix(iA, H)
-  // A modifier!
-  E = rand(3, 4);
+  L = 1 / norm(iA * H(:,1))
+  r1 = L * iA * H(:,1)
+  r2 = L * iA * H(:,2)
+  r3 = r1 .* r2
+  t = L * iA * H(:,3)
+  E = [r1,r2,r3,t]
+  disp(E)
 endfunction
-

@@ -186,15 +186,43 @@
 %	INTRO
 %----------------------------------------------------------------------------------------
 
-\begin{homeworkProblem}
+\section{Introduction}
 
 - expliquer pourquoi on s'intéresse à la méthode de Zhang
-- expliquer vite fait comment fonctionne la méthode de Zhang
-- présenter les données qu'on possède
-- résumer ce qu'on va faire
-- seulement cas des caméras sans distorsion
 
-\end{homeworkProblem}
+Flexible, calibrer aisément la caméra.
+Adapté pour utilisation sans connaissances en géométrie 3D our en vision artificielle.
+La technique nécessite uniquement la caméra et un motif planaire, représenté avec au moins 2 orientations différentes.
+Ce motif peut être facilement imprimé puis attaché à une surface planaire.
+La caméra ou le plan peuvent être bougés librement.
+Cette technique est simple à mettre en oeuvre, flexible, mais aussi très peu couteuse, au contraire des méthodes classiques qui nécessitaient par exemple des "mires" en 3 dimensions.
+
+- expliquer vite fait comment fonctionne la méthode de Zhang
+
+  Lire les coordonnees des points de la mire dans la scene
+  Initialiser la matrice des contraintes
+  Matrices des homographies
+  Coordonnees de tous les points image
+  Boucler pour toutes les images
+    Lire les points de l'image
+    Estimer l'homographie entre la mire et l' image
+    Ajouter deux lignes de contraintes dans V
+  Calculer le vecteur b
+  Estimation de la matrice intrinseque
+  Estimations des matrices extrinseques
+
+À partir de la
+- présenter les données qu'on possède
+   des fichiers texte listant les coordonnées des points de la mire dans l'espace 3D, et celles des points extraits de 4 images de cette mire. La mire est constituée d'un damier régulier permettant de localiser 77 points situés aux coins des cases du damier.
+- résumer ce qu'on va faire
+on va calculer ça
+  \begin{itemize}
+ \item Les coordonnées homogènes de l'objet dans la scène.
+ \item La matrice extrinsèque, qui donne les rotations et translations de la caméra dans scène.
+ \item La matrice intrinsèque, qui donne les paramètres internes de la caméra, pouvant changer
+ selon les réglages de la caméra.\\
+\end{itemize}
+
 \clearpage
 
 %----------------------------------------------------------------------------------------
@@ -204,6 +232,7 @@
 \begin{homeworkProblem}
 
 - Expliquer ce qu'est une homographie
+Une homographie 
 - Expliquer à quoi ça nous sert
 - Expliquer qu'on peut récupérer des contraintes qui nous serviront pour la matrice intrinsèque
 - Montrer l'implémentation de ce truc

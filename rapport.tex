@@ -195,7 +195,7 @@ Adapté pour utilisation sans connaissances en géométrie 3D our en vision arti
 La technique nécessite uniquement la caméra et un motif planaire, représenté avec au moins 2 orientations différentes.
 Ce motif peut être facilement imprimé puis attaché à une surface planaire.
 La caméra ou le plan peuvent être bougés librement.
-Cette technique est simple à mettre en oeuvre, flexible, mais aussi très peu couteuse, au contraire des méthodes classiques qui nécessitaient par exemple des "mires" en 3 dimensions.
+Cette technique est simple à mettre en oeuvre, flexible, mais aussi très peu couteuse, au contraire des méthodes classiques qui nécessitaient par exemple des mires en 3 dimensions.
 
 - expliquer vite fait comment fonctionne la méthode de Zhang
 
@@ -220,7 +220,7 @@ on va calculer ça
  \item Les coordonnées homogènes de l'objet dans la scène.
  \item La matrice extrinsèque, qui donne les rotations et translations de la caméra dans scène.
  \item La matrice intrinsèque, qui donne les paramètres internes de la caméra, pouvant changer
- selon les réglages de la caméra.\\
+ selon les réglages de la caméra.
 \end{itemize}
 
 \clearpage
@@ -229,42 +229,69 @@ on va calculer ça
 %	DÉTERMINATION DE L'HOMOGRAPHIE ENTRE POINTS DE LA SCÈNE ET POINTS PROJETÉS
 %----------------------------------------------------------------------------------------
 
-\begin{homeworkProblem}
+\section{Homographie et contraintes}
 
 - Expliquer ce qu'est une homographie
-Une homographie 
+Une homographie est une transformation linéaire entre deux plans projectifs.
+Dans notre cas, cela correspond à la transformation entre le motif imprimé et la projection captée par la caméra.
 - Expliquer à quoi ça nous sert
-- Expliquer qu'on peut récupérer des contraintes qui nous serviront pour la matrice intrinsèque
+Ça nous servira à définir les contraintes qui nous serviront à trouver la matrice intrinsèque
+
 - Montrer l'implémentation de ce truc
+These are the two basic constraints on the intrinsic parameters, given one homography.  Because a
+homography has 8 degrees of freedom and there are 6 extrinsic parameters (3 for rotation and 3 for
+translation), we can only obtain 2 constraints on the intrinsic parameters.
 
-%Listing \ref{homework_example} shows a Perl script.
-%\perlscript{homework_example}{Sample Perl Script With Highlighting}
 
-\end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
 %	DÉTERMINATION DE LA MATRICE INTRINSÈQUE
 %----------------------------------------------------------------------------------------
 
-\begin{homeworkProblem}
+\section{Matrice Intrinsèque}
 
-- Expliquer ce qu'est une matrice intrinsèque
-- Expliquer ce qu'elle contient
+Matrice intrinsèque
+les paramètres intrinsèques qui sont internes à la caméra
+\begin{itemize}
+\item f : la distance focale ;
+\item k u  et  k v %{\displaystyle k_{u}{\mbox{ et }}k_{v}} k_u \mbox{ et } k_v : les facteurs d'agrandissement de l'image ;
+\item c u  et  c v %{\displaystyle c_{u}{\mbox{ et }}c_{v}} c_u \mbox{ et } c_v : les coordonnées de la projection du centre optique de la caméra sur le plan image ;
+\item s u v %{\displaystyle s_{uv}} s_{uv} : qui traduit la non-orthogonalité potentielle des lignes et des colonnes de cellules électroniques photosensibles qui composent le capteur de la caméra. La plupart du temps, ce paramètre est négligé et prend donc une valeur nulle.
+\end{itemize}
+
+p19 récupere les paramètres puis on les bazarde dans une matrice
 - Montrer l'implémentation
 
-\end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
 %	DÉTERMINATION DE LA MATRICE EXTRINSÈQUE
 %----------------------------------------------------------------------------------------
 
-\begin{homeworkProblem}
-
-- Expliquer ce qu'est une matrice intrinsèque
-- Expliquer ce qu'elle contient
+\section{Matrice Extrinsèque}
+paramètres extrinsèques qui peuvent varier suivant la position de la caméra dans l'espace de travail.
+\begin{itemize}
+\item %R_{{3\times 3}} : qui est la matrice de rotation permettant de passer du repère lié à l'espace de travail au repère lié à la caméra ;
+\item %t x , t y  et  t z {\displaystyle t_{x},t_{y}{\mbox{ et }}t_{z}} t_x, t_y \mbox{ et }t_z : qui sont les composantes du vecteur de translation permettant de passer du repère lié à l'espace de travail au repère lié à la caméra.
+\end{itemize}
 - Montrer l'implémentation
 
-\end{homeworkProblem}
+%----------------------------------------------------------------------------------------
+%	RÉSULTATS OBTENUS
+%----------------------------------------------------------------------------------------
+
+\section{Résultats}
+
+c'est très la ressemblance
+
+%----------------------------------------------------------------------------------------
+%	VERSION SIMPLIFIÉE
+%----------------------------------------------------------------------------------------
+
+\section{Zhang simplifié}
+
+Si on suppose que ces paramètres sont connus par construction (taille du capteur, nombre de pixels, etc.), indiquer comment on peut modifier la méthode de Zhang afin de ne déterminer que la distance focale de la caméra (exprimée en unités pixel).
+
+%tout doux
 
 %----------------------------------------------------------------------------------------
 
@@ -272,13 +299,11 @@ Une homographie
 %	CONCLUSION
 %----------------------------------------------------------------------------------------
 
-\begin{homeworkProblem}
+\section{Conclusion}
 
 - On a donc les 2 matrices qui vont bien
-- Grâce à ça on connait les paramètres de la caméra, alors qu'ils n'étaient pas donnés par le constructeur (je crois ?)
+- Grâce à ça on connait les paramètres de la caméra, alors qu'ils n'étaient pas donnés par le constructeur
 - Pratique car pas besoin de trop de matos
-
-\end{homeworkProblem}
 
 %----------------------------------------------------------------------------------------
 

@@ -54,5 +54,4 @@ function E = ExtrinsicMatrix(iA, H)
   r3 = r1 .* r2
   t = L * iA * H(:,3)
   E = [r1,r2,r3,t]
-  disp(E)
 endfunction

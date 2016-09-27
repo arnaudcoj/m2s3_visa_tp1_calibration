@@ -222,6 +222,8 @@ Une homographie est une transformation linéaire entre deux plans projectifs. C'
 
 Dans notre cas, cela correspond à la transformation entre le motif imprimé et la projection captée par la caméra.
 
+Pour chaque image, nous calculerons la matrice d'homographie.
+
 \begin{equation}
   \begin{bmatrix}
     h_1 & h_2 & h_3
@@ -246,6 +248,7 @@ Dans notre cas, cela correspond à la transformation entre le motif imprimé et 
 h_{i3} h_{j1} + h_{i1} h_{j3} , h_{i3} h_{j2} + h_{i2} h_{j3} , h_{i3} h_{j3} ]^T
 \end{equation}
 
+Nous ajoutons enfin ces contraintes à une matrice V. Puis nous recommençons l'opération avec une image différente.
 - Montrer l'implémentation des contraintes
 
 %----------------------------------------------------------------------------------------
@@ -266,12 +269,12 @@ La matrice intrinsèque représente les paramètres propres à la caméra. Ces p
 \end{equation}
 
 \begin{itemize}
-\item \alpha et \beta sont les facteurs d'agrandissement de l'image, c'est à dire la taille que représente un pixel sur l'image réelle (par exemple, 5mm par pixel) ;
-\item u_0 et v_0 représentent l'origine de l'image projetée sur les capteurs. Il faut se déplacer de (u_0, v_0) à partir du centre afin de retrouver l'origine de l'image ;
-\item \gamma traduit l'angle dans lequel sont placés les capteurs photosensibles de la caméra les uns par rapport aux autres. La plupart du temps, l'angle est un angle droit, ce qui fait que ce paramètre est négligé et prend donc une valeur nulle.
+\item $\alpha$ et $\beta$ sont les facteurs d'agrandissement de l'image multipliés par la distance focale ($k_u * f$, $k_v * f$). C'est à dire la taille que représente un pixel sur l'image réelle (par exemple, 5mm par pixel) ;
+\item $u_0$ et $v_0$ représentent l'origine de l'image projetée sur les capteurs. Il faut se déplacer de (u_0, v_0) à partir du centre afin de retrouver l'origine de l'image ;
+\item $\gamma$ traduit l'angle dans lequel sont placés les capteurs photosensibles de la caméra les uns par rapport aux autres, multiplié par la distance focale ()$s_{uv} * f$). La plupart du temps, l'angle est un angle droit, ce qui fait que ce paramètre est négligé et prend donc une valeur nulle.
 \end{itemize}
 
-Ces paramètres sont calculés à partir des équations suivantes :
+Ces paramètres sont calculés à partir des équations suivantes, en se servant d'une matrice B, matrice calculée à l'aide des termes de contraintes trouvés dans la partie précédente :
 \begin{equation}
   \begin{aligned}
     v_0 &= (B_{12}B_{13} - B_{11}B_{23}) / (B_{11}B_{22} -B_{12}^2) \\
@@ -394,9 +397,36 @@ De même pour les rotations (3 colonnes de gauche), celles-ci approchent de 0 da
 
 \section{Zhang simplifié}
 
+Question :
 Si on suppose que ces paramètres sont connus par construction (taille du capteur, nombre de pixels, etc.), indiquer comment on peut modifier la méthode de Zhang afin de ne déterminer que la distance focale de la caméra (exprimée en unités pixel).
 
-%tout doux
+On sait que la matrice intrinsèque
+\begin{equation}
+  A=
+  \begin{bmatrix}
+   \alpha & \gamma & u_0 \\
+   0 & \beta & v_0 \\
+   0 & 0 & 1 \\
+  \end{bmatrix}
+  =
+  \begin{bmatrix}
+   k_uf & s_{uv}f & u_0 \\
+   0 & k_vf & v_0 \\
+   0 & 0 & 1 \\
+  \end{bmatrix}
+  *
+  \begin{bmatrix}
+   f & 0 & 0 \\
+   0 & f & 0 \\
+   0 & 0 & 1 \\
+  \end{bmatrix}
+\end{equation}
+
+On sait également que les facteurs d'échelles $k_u$ et $k_v$ correspondent à $(nombre de pixels / taille d\'un pixel)$ respectivement en x et en y.
+
+Comme on connait ces valeurs, on peut donc retrouver la valeur de la focale en trouvant $\alpha$, $\beta$ et en résolvant une des opérations suivantes :
+$f = \alpha / k_u = \beta / k_v$
+
 
 %----------------------------------------------------------------------------------------
 
@@ -406,9 +436,9 @@ Si on suppose que ces paramètres sont connus par construction (taille du capteu
 
 \section{Conclusion}
 
-- On a donc les 2 matrices qui vont bien
-- Grâce à ça on connait les paramètres de la caméra, alors qu'ils n'étaient pas donnés par le constructeur
-- Pratique car pas besoin de trop de matos
+La méthode de Zhang nous permet donc de trouver les paramètres propres à la caméra, mais aussi de situer la caméra par rapport à la mire dans la scène.
+Nous avons constaté qu'en plus d'être peu couteuse et simple d'utilisation, cette méthode apportait des résultats s'approchant des propriétés attendues.
+Ces raisons nous font comprendre que la méthode de Zhang est une méthode particulièrement recommandée afin de calibrer une caméra.
 
 %----------------------------------------------------------------------------------------
 

@@ -4,14 +4,20 @@
 
 \documentclass{article}
 
+\usepackage[english,francais]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{setspace}
+\usepackage[french]{varioref}
+
 \usepackage{fancyhdr} % Required for custom headers
 \usepackage{lastpage} % Required to determine the last page for the footer
 \usepackage{extramarks} % Required for headers and footers
 \usepackage[usenames,dvipsnames]{color} % Required for custom colors
-\usepackage{graphicx} % Required to insert images
 \usepackage{listings} % Required for insertion of code
 \usepackage{courier} % Required for the courier font
-\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
 
 % Margins
 \topmargin=-0.45in
@@ -216,15 +222,31 @@ Une homographie est une transformation linéaire entre deux plans projectifs. C'
 
 Dans notre cas, cela correspond à la transformation entre le motif imprimé et la projection captée par la caméra.
 
-- formules
+\begin{equation}
+  \begin{bmatrix}
+    h_1 & h_2 & h_3
+  \end{bmatrix}
+  = \lambda A
+  \begin{bmatrix}
+    r_1 & r_2 & t
+  \end{bmatrix}
+\end{equation}
+
+\begin{equation}
+  \begin{aligned}
+    h_1^T A^{-T} A^{-1} h_2 &= 0 \\
+    h_1^T A^{-T} A^{-1} h_1 &= h_2^T A^{-T} A^{-1} h_2
+  \end{aligned}
+\end{equation}
 
 À partir de cette matrice, nous pouvons obtenir 2 contraintes d'homographie, qui nous serviront à calculer la matrice intrinsèque.
 
+\begin{equation}
+  v_{ij} = [h_{i1} h_{j1} , h_{i1} h_{j2} + h_{i2} h_{j1} , h_{i2} h_{j2} ,
+h_{i3} h_{j1} + h_{i1} h_{j3} , h_{i3} h_{j2} + h_{i2} h_{j3} , h_{i3} h_{j3} ]^T
+\end{equation}
 
-- formules
-
-- Montrer l'implémentation de ce truc
-
+- Montrer l'implémentation des contraintes
 
 %----------------------------------------------------------------------------------------
 %	DÉTERMINATION DE LA MATRICE INTRINSÈQUE
@@ -232,29 +254,72 @@ Dans notre cas, cela correspond à la transformation entre le motif imprimé et 
 
 \section{Matrice Intrinsèque}
 
-Matrice intrinsèque
-les paramètres intrinsèques qui sont internes à la caméra
+La matrice intrinsèque représente les paramètres propres à la caméra. Ces paramètres ne sont pas forcément connus mais peuvent être retrouvés grâce à la méthode de Zhang.
+
+\begin{equation}
+  A=
+  \begin{bmatrix}
+   \alpha & \gamma & u_0 \\
+   0 & \beta & v_0 \\
+   0 & 0 & 1 \\
+  \end{bmatrix}
+\end{equation}
+
 \begin{itemize}
-\item f : la distance focale ;
-\item k u  et  k v %{\displaystyle k_{u}{\mbox{ et }}k_{v}} k_u \mbox{ et } k_v : les facteurs d'agrandissement de l'image ;
-\item c u  et  c v %{\displaystyle c_{u}{\mbox{ et }}c_{v}} c_u \mbox{ et } c_v : les coordonnées de la projection du centre optique de la caméra sur le plan image ;
-\item s u v %{\displaystyle s_{uv}} s_{uv} : qui traduit la non-orthogonalité potentielle des lignes et des colonnes de cellules électroniques photosensibles qui composent le capteur de la caméra. La plupart du temps, ce paramètre est négligé et prend donc une valeur nulle.
+\item \alpha et \beta sont les facteurs d'agrandissement de l'image, c'est à dire la taille que représente un pixel sur l'image réelle (par exemple, 5mm par pixel) ;
+\item u_0 et v_0 représentent l'origine de l'image projetée sur les capteurs. Il faut se déplacer de (u_0, v_0) à partir du centre afin de retrouver l'origine de l'image ;
+\item \gamma traduit l'angle dans lequel sont placés les capteurs photosensibles de la caméra les uns par rapport aux autres. La plupart du temps, l'angle est un angle droit, ce qui fait que ce paramètre est négligé et prend donc une valeur nulle.
 \end{itemize}
 
-p19 récupere les paramètres puis on les bazarde dans une matrice
-- Montrer l'implémentation
+Ces paramètres sont calculés à partir des équations suivantes :
+\begin{equation}
+  \begin{aligned}
+    v_0 &= (B_{12}B_{13} - B_{11}B_{23}) / (B_{11}B_{22} -B_{12}^2) \\
+    \delta &= B_{33} - [B_{13}^2 + v_0(B_{12}B_{13} - B_{11}B_{23})] / B_{11} \\
+    \alpha &= \sqrt{\lambda/B_{11}} \\
+    \beta &= \sqrt{\lambda B_{11}/(B_{11}B{22}/B{12}^2}) \\
+    \gamma &= -B_{12}\alpha^2\beta/\lambda \\
+    u_0 &= \gamma v_0 /\beta - B_{13}\alpha^2\lambda
+  \end{aligned}
+\end{equation}
 
+- Montrer l'implémentation matrice intrinsèque
 
 %----------------------------------------------------------------------------------------
 %	DÉTERMINATION DE LA MATRICE EXTRINSÈQUE
 %----------------------------------------------------------------------------------------
 
 \section{Matrice Extrinsèque}
-paramètres extrinsèques qui peuvent varier suivant la position de la caméra dans l'espace de travail.
+Nous pouvons désormais récupérer les paramètres extrinsèques de la caméra.
+Ces paramètres varient en fonction de la position et de la rotation du périphérique dans l'environnement.
+
+\begin{equation}
+  \begin{aligned}
+    r_1 &= \lambda A^{-1} h_1 \\
+    r_2 &= \lambda A^{-1} h_2 \\
+    r_3 &= r_1 * r_2 \\
+    t &= \lambda A^{-1} h_3
+  \end{aligned}
+\end{equation}
+
 \begin{itemize}
-\item %R_{{3\times 3}} : qui est la matrice de rotation permettant de passer du repère lié à l'espace de travail au repère lié à la caméra ;
-\item %t x , t y  et  t z {\displaystyle t_{x},t_{y}{\mbox{ et }}t_{z}} t_x, t_y \mbox{ et }t_z : qui sont les composantes du vecteur de translation permettant de passer du repère lié à l'espace de travail au repère lié à la caméra.
+\item
+\begin{equation}
+  \begin{bmatrix}
+    r_1, r_2, r_3
+  \end{bmatrix}
+\end{equation}
+est la matrice de rotation permettant de passer du repère lié à l'espace de travail au repère lié à la caméra ;
+
+\item
+\begin{equation}
+  \begin{bmatrix}
+    t_x, t_y, t_z
+  \end{bmatrix}
+\end{equation}
+ représente la translation permettant de passer du repère lié à la scène au repère lié à la caméra.
 \end{itemize}
+
 - Montrer l'implémentation
 
 %----------------------------------------------------------------------------------------
@@ -263,7 +328,65 @@ paramètres extrinsèques qui peuvent varier suivant la position de la caméra d
 
 \section{Résultats}
 
-c'est très la ressemblance
+\subsection{Matrice Intrinsèque}
+
+Résultat obtenu :
+  $\begin{bmatrix}
+      3498.2767 & - 3.1310503  &  336.76583 \\
+      0.        &   3503.8946  &  220.1142 \\
+      0.        &   0.         &  1.
+  \end{bmatrix}$
+
+Résultat attendu :
+  $\begin{bmatrix}
+    3546.099291 & 0.000000 & 320.000000 \\
+    0.000000 & 3546.099291 & 240.000000 \\
+    0.000000 & 0.000000 & 1.000000
+  \end{bmatrix}$
+
+On constate que le résultat obtenu est très proche du résultat attendu.
+
+\subsection{Matrices Extrinsèques}
+
+Image 1 :
+Résultat obtenu :
+$\begin{bmatrix}
+  0.9999998 & 0.0009052 & 0.0009052 & - 48.811566 \\
+  0.0000377 & 0.9982948 & 0.0000376 & 54.733308 \\
+  0.0006696 & - 0.0015763 & - 0.0000011 & 9854.3605
+\end{bmatrix}$
+Résultat attendu :
+Translation = (0, 0, 10000), Rotation = (0, 0, 0)
+
+Image 2 :
+$\begin{bmatrix}
+  0.7124496 & 0.0007762 & 0.0005530 & - 46.123208 \\
+  - 0.0039703 & 1.0010299 & - 0.0039744 & 43.83032 \\
+  - 0.7017120 & - 0.0006379 & 0.0004476 & 7905.8899
+\end{bmatrix}$
+Résultat attendu :
+Translation = (0, 0, 8000), Rotation = (0, 0.785398, 0)
+
+Image 3 :
+$\begin{bmatrix}
+  0.9848432 & 0.1745697 & 0.1719238 & - 43.812298 \\
+  - 0.1734468 & 0.9833136 & - 0.1705526 & 49.196566 \\
+  0.0002832 & 0.0005524 & 0.0000002 & 8870.6728
+\end{bmatrix}$
+Résultat attendu :
+Translation = (0, 0, 9000), Rotation = (0, 0, -0.174532)
+
+Image 4 :
+$\begin{bmatrix}
+  1. & 0.0045336 & 0.0045336 & - 143.86961 \\
+  0.0000023 & 0.7020868 & 0.0000016 & 42.078156 \\
+  - 0.0000609 & - 0.714386 & 0.0000435 & 8872.4252
+\end{bmatrix}$
+Résultat attendu :
+Translation = (-100, 0, 9000), Rotation = (-0.785398, 0, 0)
+
+On constate ici aussi que les translations calculées (colonne de droite de chaque matrice) sont équivalentes aux translations attendues.
+De même pour les rotations (3 colonnes de gauche), celles-ci approchent de 0 dans les deux cas.
 
 %----------------------------------------------------------------------------------------
 %	CALIBRATION FOCALE

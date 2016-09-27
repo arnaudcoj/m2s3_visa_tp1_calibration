@@ -1,24 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Programming/Coding Assignment
-% LaTeX Template
-%
-% This template has been downloaded from:
-% http://www.latextemplates.com
-%
-% Original author:
-% Ted Pavlic (http://www.tedpavlic.com)
-%
-% Note:
-% The \lipsum[#] commands throughout this template generate dummy text
-% to fill the template out. These commands should all be removed when
-% writing assignment content.
-%
-% This template uses a Perl script as an example snippet of code, most other
-% languages are also usable. Configure them in the "CODE INCLUSION
-% CONFIGURATION" section.
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %----------------------------------------------------------------------------------------
 %	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
 %----------------------------------------------------------------------------------------
@@ -188,40 +167,42 @@
 
 \section{Introduction}
 
-- expliquer pourquoi on s'intéresse à la méthode de Zhang
+Dans le domaine de la vision artificielle, calibrer le périphérique d'acquisition (ici une caméra) est une étape indispensable, nécessaire pour l'extraction de données provenant d'une image en 2 dimensions.
+Il s'agit de déterminer quelle transformation permet de passer d'un élément 3D à sa projection en 2D.
 
-Flexible, calibrer aisément la caméra.
-Adapté pour utilisation sans connaissances en géométrie 3D our en vision artificielle.
-La technique nécessite uniquement la caméra et un motif planaire, représenté avec au moins 2 orientations différentes.
-Ce motif peut être facilement imprimé puis attaché à une surface planaire.
-La caméra ou le plan peuvent être bougés librement.
-Cette technique est simple à mettre en oeuvre, flexible, mais aussi très peu couteuse, au contraire des méthodes classiques qui nécessitaient par exemple des mires en 3 dimensions.
-
-- expliquer vite fait comment fonctionne la méthode de Zhang
-
-  Lire les coordonnees des points de la mire dans la scene
-  Initialiser la matrice des contraintes
-  Matrices des homographies
-  Coordonnees de tous les points image
-  Boucler pour toutes les images
-    Lire les points de l'image
-    Estimer l'homographie entre la mire et l' image
-    Ajouter deux lignes de contraintes dans V
-  Calculer le vecteur b
-  Estimation de la matrice intrinseque
-  Estimations des matrices extrinseques
-
-À partir de la
-- présenter les données qu'on possède
-   des fichiers texte listant les coordonnées des points de la mire dans l'espace 3D, et celles des points extraits de 4 images de cette mire. La mire est constituée d'un damier régulier permettant de localiser 77 points situés aux coins des cases du damier.
-- résumer ce qu'on va faire
-on va calculer ça
-  \begin{itemize}
- \item Les coordonnées homogènes de l'objet dans la scène.
- \item La matrice extrinsèque, qui donne les rotations et translations de la caméra dans scène.
- \item La matrice intrinsèque, qui donne les paramètres internes de la caméra, pouvant changer
- selon les réglages de la caméra.
+La transformation en question dépend de plusieurs paramètres :
+\begin{itemize}
+  \item Les propriétés de l'élément, ainsi que sa situation dans l'espace ;
+  \item Les coordonnées intrinsèques, propres au périphérique d'acquisition ;
+  \item Les coordonnées extrinsèques, donnant la situation du périphérique dans l'espace.
 \end{itemize}
+
+Il arrive que nous ne soyons pas en possession des coordonnées intrinsèques, ni extrinsèques du périphérique d'acquisition. Ces données sont communiquées ou non par le fabricant.
+
+Afin de retrouver ces paramètres, plusieurs méthodes sont disponibles. Nous allons nous intéresser ici à la méthode de Zhang.
+
+Nous disposons de fichiers texte listant les propriétés d'une mire dans l'espace 3D. 4 images ont été créés à partir de cette mire, nous disposons également de leurs propriétés.
+
+%----------------------------------------------------------------------------------------
+%	MÉTHODE DE ZHANG
+%----------------------------------------------------------------------------------------
+
+\section{La Méthode de Zhang}
+
+Cette méthode retient notre attention pour plusieurs raisons. En effet, celle-ci est simple à mettre en oeuvre et peu couteuse :
+La technique nécessite uniquement la caméra et un motif planaire (dont on connait les propriétés) représenté dans au moins 2 orientations différentes. Au contraire des méthodes classiques qui nécessitaient par exemple des mires en 3 dimensions.
+Elle est également flexible :
+Le motif peut être facilement imprimé puis attaché à n'importe quelle surface planaire. De plus, la caméra et le plan peuvent être bougés librement.
+
+Cette méthode est découpée en 3 grandes étapes :
+Pour chaque image :
+\begin{itemize}
+  \item On va calculer l'homographie (transformation entre 2 plans ayant les mêmes propriétés, ici des plans 2D) entre la scène et la projection ;
+  \item À partir de l'homographie et des informations qui en seront extraites, on pourra calculer la matrice de paramètres intrinsèques ;
+  \item On déterminera finalement la matrice de paramètres extrinsèques propre à chaque image.
+\end{itemize}
+
+Ces étapes seront détaillées dans le présent document.
 
 \clearpage
 
@@ -284,7 +265,7 @@ paramètres extrinsèques qui peuvent varier suivant la position de la caméra d
 c'est très la ressemblance
 
 %----------------------------------------------------------------------------------------
-%	VERSION SIMPLIFIÉE
+%	CALIBRATION FOCALE
 %----------------------------------------------------------------------------------------
 
 \section{Zhang simplifié}

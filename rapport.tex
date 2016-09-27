@@ -207,22 +207,23 @@ Ces étapes seront détaillées dans le présent document.
 \clearpage
 
 %----------------------------------------------------------------------------------------
-%	DÉTERMINATION DE L'HOMOGRAPHIE ENTRE POINTS DE LA SCÈNE ET POINTS PROJETÉS
+%	DÉTERMINATION DES CONTRAINTES À PARTIR DE L'HOMOGRAPHIE
 %----------------------------------------------------------------------------------------
 
 \section{Homographie et contraintes}
 
-- Expliquer ce qu'est une homographie
-Une homographie est une transformation linéaire entre deux plans projectifs.
+Une homographie est une transformation linéaire entre deux plans projectifs. C'est à dire qu'il n'y aura pas de perte ni d'ajout d'informations. Celles existantes sont juste transformées pour être comprises dans un nouveau plan, aux mêmes propriétés que le premier. Les lignes restent des lignes, les points restent des points, etc. Cependant, les angles et les distances sont modifiés
+
 Dans notre cas, cela correspond à la transformation entre le motif imprimé et la projection captée par la caméra.
-- Expliquer à quoi ça nous sert
-Ça nous servira à définir les contraintes qui nous serviront à trouver la matrice intrinsèque
+
+- formules
+
+À partir de cette matrice, nous pouvons obtenir 2 contraintes d'homographie, qui nous serviront à calculer la matrice intrinsèque.
+
+
+- formules
 
 - Montrer l'implémentation de ce truc
-These are the two basic constraints on the intrinsic parameters, given one homography.  Because a
-homography has 8 degrees of freedom and there are 6 extrinsic parameters (3 for rotation and 3 for
-translation), we can only obtain 2 constraints on the intrinsic parameters.
-
 
 
 %----------------------------------------------------------------------------------------

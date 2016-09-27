@@ -1,178 +1,28 @@
-%----------------------------------------------------------------------------------------
-%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
-%----------------------------------------------------------------------------------------
+\documentclass[a4paper]{article}
 
-\documentclass{article}
-
-\usepackage[english,francais]{babel}
 \usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage[pdftex]{graphicx}
-\usepackage{setspace}
-\usepackage[french]{varioref}
-
-\usepackage{fancyhdr} % Required for custom headers
-\usepackage{lastpage} % Required to determine the last page for the footer
-\usepackage{extramarks} % Required for headers and footers
-\usepackage[usenames,dvipsnames]{color} % Required for custom colors
-\usepackage{listings} % Required for insertion of code
-\usepackage{courier} % Required for the courier font
+\usepackage{graphicx}
+\usepackage[frenchb]{babel}
 \usepackage{amsmath}
-
-% Margins
-\topmargin=-0.45in
-\evensidemargin=0in
-\oddsidemargin=0in
-\textwidth=6.5in
-\textheight=9.0in
-\headsep=0.25in
-
-\linespread{1.1} % Line spacing
-
-% Set up the header and footer
-\pagestyle{fancy}
-\lhead{\hmwkAuthorName} % Top left header
-\chead{\hmwkClass\ : \hmwkTitle} % Top center head
-\rhead{\firstxmark} % Top right header
-\lfoot{\lastxmark} % Bottom left footer
-\cfoot{} % Bottom center footer
-\rfoot{Page\ \thepage\ of\ \protect\pageref{LastPage}} % Bottom right footer
-\renewcommand\headrulewidth{0.4pt} % Size of the header rule
-\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
-
-\setlength\parindent{0pt} % Removes all indentation from paragraphs
-
-%----------------------------------------------------------------------------------------
-%	CODE INCLUSION CONFIGURATION
-%----------------------------------------------------------------------------------------
-
-\definecolor{MyDarkGreen}{rgb}{0.0,0.4,0.0} % This is the color used for comments
-\lstloadlanguages{Perl} % Load Perl syntax for listings, for a list of other languages supported see: ftp://ftp.tex.ac.uk/tex-archive/macros/latex/contrib/listings/listings.pdf
-\lstset{language=Perl, % Use Perl in this example
-        frame=single, % Single frame around code
-        basicstyle=\small\ttfamily, % Use small true type font
-        keywordstyle=[1]\color{Blue}\bf, % Perl functions bold and blue
-        keywordstyle=[2]\color{Purple}, % Perl function arguments purple
-        keywordstyle=[3]\color{Blue}\underbar, % Custom functions underlined and blue
-        identifierstyle=, % Nothing special about identifiers
-        commentstyle=\usefont{T1}{pcr}{m}{sl}\color{MyDarkGreen}\small, % Comments small dark green courier font
-        stringstyle=\color{Purple}, % Strings are purple
-        showstringspaces=false, % Don't put marks in string spaces
-        tabsize=5, % 5 spaces per tab
-        %
-        % Put standard Perl functions not included in the default language here
-        morekeywords={rand},
-        %
-        % Put Perl function parameters here
-        morekeywords=[2]{on, off, interp},
-        %
-        % Put user defined functions here
-        morekeywords=[3]{test},
-       	%
-        morecomment=[l][\color{Blue}]{...}, % Line continuation (...) like blue comment
-        numbers=left, % Line numbers on left
-        firstnumber=1, % Line numbers start with line 1
-        numberstyle=\tiny\color{Blue}, % Line numbers are blue and small
-        stepnumber=5 % Line numbers go in steps of 5
-}
-
-% Creates a new command to include a perl script, the first parameter is the filename of the script (without .pl), the second parameter is the caption
-\newcommand{\perlscript}[2]{
-\begin{itemize}
-\item[]\lstinputlisting[caption=#2,label=#1]{#1.pl}
-\end{itemize}
-}
-
-%----------------------------------------------------------------------------------------
-%	DOCUMENT STRUCTURE COMMANDS
-%	Skip this unless you know what you're doing
-%----------------------------------------------------------------------------------------
-
-% Header and footer for when a page split occurs within a problem environment
-\newcommand{\enterProblemHeader}[1]{
-\nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
-\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
-}
-
-% Header and footer for when a page split occurs between problem environments
-\newcommand{\exitProblemHeader}[1]{
-\nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
-\nobreak\extramarks{#1}{}\nobreak
-}
-
-\setcounter{secnumdepth}{0} % Removes default section numbers
-\newcounter{homeworkProblemCounter} % Creates a counter to keep track of the number of problems
-
-\newcommand{\homeworkProblemName}{}
-\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
-\stepcounter{homeworkProblemCounter} % Increase counter for number of problems
-\renewcommand{\homeworkProblemName}{#1} % Assign \homeworkProblemName the name of the problem
-\section{\homeworkProblemName} % Make a section in the document with the custom problem count
-\enterProblemHeader{\homeworkProblemName} % Header and footer within the environment
-}{
-\exitProblemHeader{\homeworkProblemName} % Header and footer after the environment
-}
-
-\newcommand{\problemAnswer}[1]{ % Defines the problem answer command with the content as the only argument
-\noindent\framebox[\columnwidth][c]{\begin{minipage}{0.98\columnwidth}#1\end{minipage}} % Makes the box around the problem answer and puts the content inside
-}
-
-\newcommand{\homeworkSectionName}{}
-\newenvironment{homeworkSection}[1]{ % New environment for sections within homework problems, takes 1 argument - the name of the section
-\renewcommand{\homeworkSectionName}{#1} % Assign \homeworkSectionName to the name of the section from the environment argument
-\subsection{\homeworkSectionName} % Make a subsection with the custom name of the subsection
-\enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]} % Header and footer within the environment
-}{
-\enterProblemHeader{\homeworkProblemName} % Header and footer after the environment
-}
-
-%----------------------------------------------------------------------------------------
-%	NAME AND CLASS SECTION
-%----------------------------------------------------------------------------------------
-
-\newcommand{\hmwkTitle}{TP1 : éléments de géométrie projective et calibration de caméra} % Assignment title
-\newcommand{\hmwkDueDate}{mardi 27 septembre 2016} % Due date
-\newcommand{\hmwkClass}{VisA} % Course/class
-\newcommand{\hmwkClassTime}{} % Class/lecture time
-\newcommand{\hmwkClassInstructor}{} % Teacher/lecturer
-\newcommand{\hmwkAuthorName}{Arnaud Cojez} % Your name
-
-%----------------------------------------------------------------------------------------
-%	TITLE PAGE
-%----------------------------------------------------------------------------------------
-
-\title{
-\vspace{2in}
-\textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
-\normalsize\vspace{0.1in}\small{\hmwkDueDate}\\
-\vspace{3in}
-}
-
-\author{\textbf{\hmwkAuthorName}}
-\date{} % Insert date here if you want it to appear below your name
-
-%----------------------------------------------------------------------------------------
 
 \begin{document}
 
+\title{VISA -- TP1 : éléments de géométrie projective et calibration de caméra}
+\author{Arnaud Cojez}
+\date{}
+
 \maketitle
-
-%----------------------------------------------------------------------------------------
-%	TABLE OF CONTENTS
-%----------------------------------------------------------------------------------------
-
-%\setcounter{tocdepth}{1} % Uncomment this line if you don't want subsections listed in the ToC
 
 \newpage
 \tableofcontents
 \newpage
-
 %----------------------------------------------------------------------------------------
-%	INTRO
+%	INTRODUCTION
 %----------------------------------------------------------------------------------------
 
 \section{Introduction}
 
+\subsection{Motivation}
 Dans le domaine de la vision artificielle, calibrer le périphérique d'acquisition (ici une caméra) est une étape indispensable, nécessaire pour l'extraction de données provenant d'une image en 2 dimensions.
 Il s'agit de déterminer quelle transformation permet de passer d'un élément 3D à sa projection en 2D.
 
@@ -189,11 +39,7 @@ Afin de retrouver ces paramètres, plusieurs méthodes sont disponibles. Nous al
 
 Nous disposons de fichiers texte listant les propriétés d'une mire dans l'espace 3D. 4 images ont été créés à partir de cette mire, nous disposons également de leurs propriétés.
 
-%----------------------------------------------------------------------------------------
-%	MÉTHODE DE ZHANG
-%----------------------------------------------------------------------------------------
-
-\section{La Méthode de Zhang}
+\subsection{La Méthode de Zhang}
 
 Cette méthode retient notre attention pour plusieurs raisons. En effet, celle-ci est simple à mettre en oeuvre et peu couteuse :
 La technique nécessite uniquement la caméra et un motif planaire (dont on connait les propriétés) représenté dans au moins 2 orientations différentes. Au contraire des méthodes classiques qui nécessitaient par exemple des mires en 3 dimensions.
@@ -211,7 +57,6 @@ Pour chaque image :
 Ces étapes seront détaillées dans le présent document.
 
 \clearpage
-
 %----------------------------------------------------------------------------------------
 %	DÉTERMINATION DES CONTRAINTES À PARTIR DE L'HOMOGRAPHIE
 %----------------------------------------------------------------------------------------
@@ -251,6 +96,7 @@ h_{i3} h_{j1} + h_{i1} h_{j3} , h_{i3} h_{j2} + h_{i2} h_{j3} , h_{i3} h_{j3} ]^
 Nous ajoutons enfin ces contraintes à une matrice V. Puis nous recommençons l'opération avec une image différente.
 - Montrer l'implémentation des contraintes
 
+\clearpage
 %----------------------------------------------------------------------------------------
 %	DÉTERMINATION DE LA MATRICE INTRINSÈQUE
 %----------------------------------------------------------------------------------------
@@ -269,9 +115,9 @@ La matrice intrinsèque représente les paramètres propres à la caméra. Ces p
 \end{equation}
 
 \begin{itemize}
-\item $\alpha$ et $\beta$ sont les facteurs d'agrandissement de l'image multipliés par la distance focale ($k_u * f$, $k_v * f$). C'est à dire la taille que représente un pixel sur l'image réelle (par exemple, 5mm par pixel) ;
-\item $u_0$ et $v_0$ représentent l'origine de l'image projetée sur les capteurs. Il faut se déplacer de (u_0, v_0) à partir du centre afin de retrouver l'origine de l'image ;
-\item $\gamma$ traduit l'angle dans lequel sont placés les capteurs photosensibles de la caméra les uns par rapport aux autres, multiplié par la distance focale ()$s_{uv} * f$). La plupart du temps, l'angle est un angle droit, ce qui fait que ce paramètre est négligé et prend donc une valeur nulle.
+\item $\alpha$ et $\beta$ sont les facteurs d'agrandissement de l'image multipliés par la distance focale ($k_u$ * f, $k_v$ * f). C'est à dire la taille que représente un pixel sur l'image réelle (par exemple, 5mm par pixel) ;
+\item $u_0$ et $v_0$ représentent l'origine de l'image projetée sur les capteurs. Il faut se déplacer de ($u_0$, $v_0$) à partir du centre afin de retrouver l'origine de l'image ;
+\item $\gamma$ traduit l'angle dans lequel sont placés les capteurs photosensibles de la caméra les uns par rapport aux autres, multiplié par la distance focale ($s_{uv}$ * f). La plupart du temps, l'angle est un angle droit, ce qui fait que ce paramètre est négligé et prend donc une valeur nulle.
 \end{itemize}
 
 Ces paramètres sont calculés à partir des équations suivantes, en se servant d'une matrice B, matrice calculée à l'aide des termes de contraintes trouvés dans la partie précédente :
@@ -288,6 +134,7 @@ Ces paramètres sont calculés à partir des équations suivantes, en se servant
 
 - Montrer l'implémentation matrice intrinsèque
 
+\clearpage
 %----------------------------------------------------------------------------------------
 %	DÉTERMINATION DE LA MATRICE EXTRINSÈQUE
 %----------------------------------------------------------------------------------------
@@ -325,6 +172,7 @@ est la matrice de rotation permettant de passer du repère lié à l'espace de t
 
 - Montrer l'implémentation
 
+\clearpage
 %----------------------------------------------------------------------------------------
 %	RÉSULTATS OBTENUS
 %----------------------------------------------------------------------------------------
@@ -391,6 +239,7 @@ Translation = (-100, 0, 9000), Rotation = (-0.785398, 0, 0)
 On constate ici aussi que les translations calculées (colonne de droite de chaque matrice) sont équivalentes aux translations attendues.
 De même pour les rotations (3 colonnes de gauche), celles-ci approchent de 0 dans les deux cas.
 
+\clearpage
 %----------------------------------------------------------------------------------------
 %	CALIBRATION FOCALE
 %----------------------------------------------------------------------------------------
@@ -414,7 +263,6 @@ On sait que la matrice intrinsèque
    0 & k_vf & v_0 \\
    0 & 0 & 1 \\
   \end{bmatrix}
-  *
   \begin{bmatrix}
    f & 0 & 0 \\
    0 & f & 0 \\
@@ -422,12 +270,14 @@ On sait que la matrice intrinsèque
   \end{bmatrix}
 \end{equation}
 
-On sait également que les facteurs d'échelles $k_u$ et $k_v$ correspondent à $(nombre de pixels / taille d\'un pixel)$ respectivement en x et en y.
+On sait également que les facteurs d'échelles $k_u$ et $k_v$ correspondent (respectivement en x et en y) à :
+\begin{equation}\frac{nombre\ de\ pixels}{taille\ du\ pixel}\end{equation}
 
 Comme on connait ces valeurs, on peut donc retrouver la valeur de la focale en trouvant $\alpha$, $\beta$ et en résolvant une des opérations suivantes :
-$f = \alpha / k_u = \beta / k_v$
+\begin{equation}f=\frac{\alpha}{k_u}=\frac{\beta}{k_v}\end{equation}
 
 
+\clearpage
 %----------------------------------------------------------------------------------------
 
 %----------------------------------------------------------------------------------------
@@ -440,6 +290,7 @@ La méthode de Zhang nous permet donc de trouver les paramètres propres à la c
 Nous avons constaté qu'en plus d'être peu couteuse et simple d'utilisation, cette méthode apportait des résultats s'approchant des propriétés attendues.
 Ces raisons nous font comprendre que la méthode de Zhang est une méthode particulièrement recommandée afin de calibrer une caméra.
 
+\clearpage
 %----------------------------------------------------------------------------------------
 
 \end{document}
